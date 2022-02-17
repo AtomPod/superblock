@@ -13,7 +13,6 @@ public:
     struct Options {
         ObjectView<BackendStorage> backendStorage;
         ObjectView<NeedleMap>      needleMap;
-        std::string                indexFilePath;
     };
 public:
     SuperBlock(Options o);
@@ -23,15 +22,11 @@ public:
     NeedleID   Put(ByteBuffer data);
     bool       Delete(NeedleID id);
 protected:
-    void       RegisterNeedleMapActionCallback();
-    bool       WriteToFile();
-    bool       ReadFromFile();
     bool       Check();
     bool       ParseNextPart(int64_t off, NeedleValue &value, bool &skip);
 private:
     ObjectView<BackendStorage>  m_backendStorage;
     ObjectView<NeedleMap>       m_needleMap;
-    std::string                 m_indexFilepath;
 };
 
 }

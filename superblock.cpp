@@ -6,12 +6,9 @@ namespace hfs {
 
 SuperBlock::SuperBlock(SuperBlock::Options o) :
     m_backendStorage(o.backendStorage),
-    m_needleMap(o.needleMap),
-    m_indexFilepath(o.indexFilePath)
+    m_needleMap(o.needleMap)
 {
-    ReadFromFile();
     Check();
-    RegisterNeedleMapActionCallback();
 }
 
 SuperBlock::~SuperBlock()
@@ -34,14 +31,6 @@ ByteBuffer SuperBlock::Get(NeedleID id)
     if (needle->flags()) {
         return ByteBuffer();
     }
-
-//    if (!needle->ReadHeader(m_backendStorage, index.offset(), index.size())) {
-//        return ByteBuffer();
-//    }
-
-//    if (!needle->ReadBody(m_backendStorage, index.offset(), index.size())) {
-//        return ByteBuffer();
-//    }
 
     return needle->data();
 }
@@ -80,33 +69,7 @@ bool SuperBlock::Delete(NeedleID id)
         return false;
     }
 
-    WriteToFile();
     return true;
-}
-
-void SuperBlock::RegisterNeedleMapActionCallback()
-{
-
-}
-
-bool SuperBlock::WriteToFile()
-{
-    std::ofstream  ofs(m_indexFilepath.c_str());
-    if (!ofs) {
-        return false;
-    }
-
-    return m_needleMap->WriteTo(ofs);
-}
-
-bool SuperBlock::ReadFromFile()
-{
-    std::ifstream ifs(m_indexFilepath.c_str());
-    if (!ifs) {
-        return false;
-    }
-
-    return m_needleMap->ReadFrom(ifs);
 }
 
 bool SuperBlock::Check()
@@ -116,12 +79,13 @@ bool SuperBlock::Check()
     lastValue.setSize(0);
 
     m_needleMap->AscendingVisit([&lastValue](NeedleValue value) {
-        lastValue = value;
+        if (lastValue.offset() < value.offset())
+          lastValue = value;
         return true;
     });
 
-    int64_t checkSize = lastValue.offset() + lastValue.size();
 
+    int64_t checkSize = lastValue.offset() + lastValue.size();
     // 如果文件大小大于当前储存的位置，那么说明有数据未被添加到索引中
     // 则扫描储存文件，接下来的数据，否应该建立索引
     if (m_backendStorage->Size() > checkSize) {
@@ -135,7 +99,6 @@ bool SuperBlock::Check()
                 m_needleMap->Set(value.id(), value.offset(), value.size());
             }
         }
-        WriteToFile();
     }
 
     return true;
