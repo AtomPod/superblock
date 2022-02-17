@@ -11,6 +11,7 @@ SuperBlock::SuperBlock(SuperBlock::Options o) :
 {
     ReadFromFile();
     Check();
+    RegisterNeedleMapActionCallback();
 }
 
 SuperBlock::~SuperBlock()
@@ -59,7 +60,6 @@ NeedleID SuperBlock::Put(ByteBuffer data)
         return NeedleID(0);
     }
 
-    WriteToFile();
     return needle->id();
 }
 
@@ -82,6 +82,11 @@ bool SuperBlock::Delete(NeedleID id)
 
     WriteToFile();
     return true;
+}
+
+void SuperBlock::RegisterNeedleMapActionCallback()
+{
+
 }
 
 bool SuperBlock::WriteToFile()

@@ -23,6 +23,7 @@ public:
     NeedleID   Put(ByteBuffer data);
     bool       Delete(NeedleID id);
 protected:
+    void       RegisterNeedleMapActionCallback();
     bool       WriteToFile();
     bool       ReadFromFile();
     bool       Check();
