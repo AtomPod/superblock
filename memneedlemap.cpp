@@ -47,7 +47,7 @@ bool MemNeedleMap::AscendingVisit(NeedleMap::VisitCallback callback)
         return false;
     }
 
-    for (auto value : m_needleDatas) {
+    for (const auto &value : m_needleDatas) {
         if (!callback(value)) {
             return false;
         }

@@ -14,7 +14,6 @@ public:
         ObjectView<BackendStorage> backendStorage;
         ObjectView<NeedleMap>      needleMap;
         std::string                indexFilePath;
-        uint32_t                   saveInterval;
     };
 public:
     SuperBlock(Options o);
@@ -32,10 +31,6 @@ private:
     ObjectView<BackendStorage>  m_backendStorage;
     ObjectView<NeedleMap>       m_needleMap;
     std::string                 m_indexFilepath;
-    bool                        m_backendStorageIsOwner;
-    bool                        m_needleMapIsOwner;
-    std::thread                 m_indexSaveThread;
-    uint32_t                    m_saveInterval;
 };
 
 }
