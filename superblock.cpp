@@ -7,8 +7,7 @@ namespace hfs {
 SuperBlock::SuperBlock(SuperBlock::Options o) :
     m_backendStorage(o.backendStorage),
     m_needleMap(o.needleMap),
-    m_indexFilepath(o.indexFilePath),
-    m_saveInterval(o.saveInterval)
+    m_indexFilepath(o.indexFilePath)
 {
     ReadFromFile();
     Check();

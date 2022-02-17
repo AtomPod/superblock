@@ -1,7 +1,6 @@
 ﻿#ifndef OBJECTVIEW_H
 #define OBJECTVIEW_H
 #include <atomic>
-
 namespace hfs {
 
 template<class T>
@@ -13,6 +12,8 @@ public:
     ObjectView();
     ObjectView(T &value);
     ObjectView(T *value, bool owner = true);
+
+    ObjectView(const ObjectView &other);
 
     template<class U>
     ObjectView(const ObjectView<U> &other);
@@ -54,7 +55,16 @@ ObjectView<T>::ObjectView(T *value, bool owner)
       m_counter(nullptr),
       m_ptr(value)
 {
-    m_counter = new counter_t(1);
+  m_counter = new counter_t(1);
+}
+
+template<class T>
+ObjectView<T>::ObjectView(const ObjectView &other)
+  : m_owner(other.m_owner),
+    m_counter(other.m_counter),
+    m_ptr(other.m_ptr)
+{
+  m_counter->fetch_add(1, std::memory_order_relaxed);
 }
 
 template<class T>
