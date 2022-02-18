@@ -1,5 +1,5 @@
-﻿#include "superblock.h"
-#include "needle.h"
+﻿#include "superblock/superblock.h"
+#include "superblock/needle.h"
 #include <fstream>
 
 namespace hfs {

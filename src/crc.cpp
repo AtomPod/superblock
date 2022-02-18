@@ -1,5 +1,5 @@
-﻿#include "crc.h"
-#include "utility.h"
+﻿#include "superblock/crc.h"
+#include "superblock/utility.h"
 #include <iostream>
 
 namespace hfs {
