@@ -26,24 +26,22 @@ hfs::SuperBlock superBlock(opts);
 ### 2. 添加数据
 ```C++
 std::string val = "hello super block";
-hfs::NeedleID id = superBlock.Put(val.data());
+hfs::NeedleID id = superBlock->Put(val.data());
 ```
 
 ### 3. 获取数据
 ```C++
-  hfs::ByteBuffer buffer = superBlock->Get(id);
-  std::cout << "get:" << buffer << '\n'; 
+hfs::ByteBuffer buffer = superBlock->Get(id);
+std::cout << "get:" << buffer << '\n'; 
   //(注：需要自己实现std::ostream &operator<<(std::ostream& os, const hfs::ByteBuffer &buf))
 ```
 
 ### 4. 删除数据
 ```C++
-void deleteData(hfs::SuperBlock *superBlock) {
-  std::string val = "hello super block";
-  hfs::NeedleID id = superBlock->Put(val.data());
-  bool success = superBlock->Delete(id);
-  std::cout << "delete: " << success << '\n';
-}
+std::string val = "hello super block";
+hfs::NeedleID id = superBlock->Put(val.data());
+bool success = superBlock->Delete(id);
+std::cout << "delete: " << success << '\n';
 ```
 
 ## 功能支持
@@ -52,3 +50,6 @@ void deleteData(hfs::SuperBlock *superBlock) {
 - [ ] 多线程支持
 - [ ] 网络支持
 - [ ] 自动整理储存文件
+
+## 代码实现参考
+- seaweedfs https://github.com/chrislusf/seaweedfs
