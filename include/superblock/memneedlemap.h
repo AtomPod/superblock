@@ -9,6 +9,7 @@ namespace hfs {
 
 class MemNeedleMap : public NeedleMap
 {
+    static const uint32_t DELETED_FILE_SIZE = (uint32_t)(-1);
   public:
     enum ActionResult {
       ActionResult_Ok,
@@ -33,16 +34,17 @@ class MemNeedleMap : public NeedleMap
     bool LoadIndexFromFile(const std::string &filepath);
 
   protected:
-    void initialize(const std::string &indexFile);
-    bool setRaw(NeedleID id, int64_t off, uint32_t size);
-    bool writePutActionToFile(const NeedleValue &value);
-    bool writeDeleteActionToFile(const uint64_t &from, const uint64_t &to);
-    ActionResult swapNeedIdWithLast(const NeedleID &id, uint64_t &from, uint64_t &to);
+    void Initialize(const std::string &indexFile);
+    NeedleValue SetRaw(NeedleID id, int64_t off, uint32_t size);
+    void DeleteRaw(NeedleID id);
+    bool WritePutActionToFile(const NeedleValue &value);
+    bool WriteDeleteActionToFile(NeedleValue &value);
+    bool FindAndRemoveIndex(const NeedleID &id, NeedleValue &value);
 
   private:
-    std::map<NeedleID, uint64_t> m_needleIndexs;
-    std::deque<NeedleValue> m_needleDatas;
+    std::map<NeedleID, NeedleValue> m_needleIndexs;
     std::fstream m_indexFile;
+    std::string m_indexFilePath;
 };
 
 }
