@@ -56,7 +56,10 @@ bool MemNeedleMap::AscendingVisit(NeedleMap::VisitCallback callback)
 
 void MemNeedleMap::Close()
 {
-
+  if (m_indexFile.is_open()) {
+    m_indexFile.flush();
+    m_indexFile.close();
+  }
 }
 
 bool MemNeedleMap::WriteTo(std::ostream &os)
